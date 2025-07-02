@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'Linux-Slave-S' }
+    agent { label 'win-slave-sachin1' }
     stages {
 
         stage('pull scm step') {
@@ -9,13 +9,13 @@ pipeline {
         }
         stage('compile') {
             steps {
-                sh 'mvn compile'
+                bat 'mvn compile'
             }
         }
 
         stage('build') {
             steps {
-                 sh 'mvn clean install'
+                 bat 'mvn clean install'
             }
         }
     }
