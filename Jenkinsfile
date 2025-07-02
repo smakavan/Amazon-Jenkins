@@ -1,6 +1,6 @@
 pipeline {
-    agent any
-   stages {
+    agent { label 'Linux-Slave-S' }
+    stages {
 
         stage('pull scm step') {
             steps {
