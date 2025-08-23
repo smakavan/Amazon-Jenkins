@@ -1,0 +1,14 @@
+---
+- name: Deploy WAR to Tomcat
+  hosts: tomcat
+  become: yes
+  tasks:
+    - name: Copy WAR file
+      copy:
+        src: /var/lib/jenkins/workspace/Git_ngrok_Test/Amazon-Core/target/Amazon.war
+        dest: /home/sachin/tomcat_10/apache-tomcat-10.1.42/webapps/
+        mode: "0644"
+    - name: start Tomcat
+      shell: sh startup.sh
+      args:
+        chdir: /home/sachin/tomcat_10/apache-tomcat-10.1.42/bin/
