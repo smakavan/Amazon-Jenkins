@@ -1,22 +1,33 @@
 pipeline {
-    agent { label 'win-slave-sachin1' }
-    stages {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/smakavan/Amazon-Jenkins.git', branch: 'main'
+      }
+    }
 
-        stage('pull scm step') {
-            steps {
-                git branch: 'main', url: 'https://github.com/smakavan/Amazon-Jenkins'
-            }
-        }
-        stage('compile') {
-            steps {
-                bat 'mvn compile'
-            }
-        }
+    stage('Build WAR') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
 
-        stage('build') {
-            steps {
-                 bat 'mvn clean install'
-            }
-        }
+    stage('SonarQube Analysis') {
+      steps {
+        withSonarQubeEnv('SonarQube') {
+  	sh 'mvn sonar:sonar'
+	}
+      }
+    }
+
+   stage('Deploy to Tomcat') {
+      steps {
+        ansiblePlaybook(
+          playbook: 'ansible/deploy.yml',
+          inventory: 'ansible/hosts.ini'
+        )
+      }
     }
   }
+}
